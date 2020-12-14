@@ -34,6 +34,16 @@ jobs:
         CONFIG: [Release, Debug]
 
     steps:
+      - name: List folder sizes on runner
+        run: |
+          $colItems = (Get-ChildItem "C:" -recurse | Where-Object {$_.PSIsContainer -eq $True} | Sort-Object)
+          foreach ($i in $colItems)
+            {
+              $subFolderItems = (Get-ChildItem $i.FullName | Measure-Object -property length -sum)
+              $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
+            }
+            exit 0
+
       - name: Cancel outdated
         uses: fkirc/skip-duplicate-actions@master
         with:
