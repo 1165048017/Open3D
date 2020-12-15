@@ -36,8 +36,11 @@ jobs:
     steps:
       - name: List folders on runner
         run: |
-          Get-ChildItem "D:" -ErrorAction Ignore 
-          exit 0
+          Get-PSDrive
+          mkdir C:\Open3D
+          cd C:\Open3D
+          git clone https://github.com/intel-isl/Open3D.git
+          exit 1
 
       - name: Cancel outdated
         uses: fkirc/skip-duplicate-actions@master
