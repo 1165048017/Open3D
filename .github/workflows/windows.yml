@@ -36,8 +36,13 @@ jobs:
     steps:
       - name: List folders on runner
         run: |
-          Get-ChildItem "C:\Program Files" -ErrorAction Ignore
-          exit 0
+            $colItems = (Get-ChildItem "D:" -recurse | Where-Object {$_.PSIsContainer -eq $True} | Sort-Object)
+            foreach ($i in $colItems)
+            {
+              $subFolderItems = (Get-ChildItem $i.FullName | Measure-Object -property length -sum)
+              $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
+            }
+            exit 0
 
       - name: Cancel outdated
         uses: fkirc/skip-duplicate-actions@master
